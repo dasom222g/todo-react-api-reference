@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TodoInput from '../components/TodoInput';
 import TodoList from '../components/TodoList';
+// import { header } from '../lib/utils';
 
 const Home = () => {
   const [todoList, setTodoList] = useState([]);
 
-  const addTodo = (item) => {
-    setTodoList([...todoList, item]);
+  const addTodo = async (item) => {
+    // post
+    const response = await fetch('/todos', {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+    const result = await response.json();
+    console.log('🚀 : result==>', result);
+
+    setTodoList([...todoList, result]);
   };
 
   const completeTodo = (id) => {
@@ -21,6 +30,16 @@ const Home = () => {
     setTodoList(filterTodoList);
   };
 
+  const getData = async () => {
+    const data = await fetch('/todos');
+    const result = await data.json();
+    result && setTodoList(result);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <>
       <header>
@@ -34,6 +53,9 @@ const Home = () => {
         completeTodo={completeTodo}
         deleteTodo={deleteTodo}
       />
+      <button type="button" onClick={getData}>
+        api 테스트
+      </button>
     </>
   );
 };

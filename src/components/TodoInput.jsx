@@ -12,7 +12,6 @@ const TodoInput = ({ addTodo }) => {
     event.preventDefault();
     // set item
     const newItem = {
-      id: Date.now(),
       text: inputValue,
       isComplete: false,
     };
